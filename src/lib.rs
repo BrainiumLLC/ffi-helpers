@@ -26,8 +26,8 @@ pub fn sdk_path(target: &str) -> Option<String> {
 
 pub fn default_clang_args(
     includes: &[&str],
-    apple_args: &[&str],
-    android_args: &[&str],
+    apple_args: &[String],
+    android_args: &[String],
 ) -> Vec<String> {
     let target = std::env::var("TARGET").unwrap();
 
