@@ -1,0 +1,13 @@
+[package]
+name = "ffi_helpers"
+version = "0.1.0"
+edition = "2021"
+
+[features]
+default = ["cpp-17"]
+cpp-11 = []
+cpp-14 = []
+cpp-17 = []
+
+[dependencies]
+bossy = "0.2.1"
