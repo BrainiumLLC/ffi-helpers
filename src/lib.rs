@@ -24,10 +24,10 @@ pub fn sdk_path(target: &str) -> Option<String> {
     )
 }
 
-pub fn default_clang_args() -> Vec<String> {
+pub fn default_clang_args(includes: &[&str]) -> Vec<String> {
     let target = std::env::var("TARGET").unwrap();
 
-    let mut args = vec!["-xc++".into(), CPP_VERSION.into()];
+    let mut args = vec!["-xc++".into(), "-stdlib=libc++".into(), CPP_VERSION.into()];
 
     if target.contains("apple") {
         if let Some(sdk_path) = sdk_path(&target) {
@@ -43,6 +43,10 @@ pub fn default_clang_args() -> Vec<String> {
         target
     };
 
+    includes
+        .iter()
+        .for_each(|include| args.push(format!("-I{}", include)));
+        
     args.push(format!("--target={}", target));
     args
 }
