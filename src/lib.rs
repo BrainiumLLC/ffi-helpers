@@ -5,6 +5,32 @@ const CPP_VERSION: &str = "-std=c++14";
 #[cfg(feature = "cpp-17")]
 const CPP_VERSION: &str = "-std=c++17";
 
+pub fn target() -> String {
+    std::env::var("TARGET").unwrap()
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum TargetOs {
+    Ios(String),
+    Android(String),
+    MacOs(String),
+}
+
+impl TargetOs {
+    pub fn detect() -> Option<Self> {
+        let target = target();
+        if target.contains("ios") {
+            Some(Self::Ios(target))
+        } else if target.contains("apple") {
+            Some(Self::MacOs(target))
+        } else if target.contains("android") {
+            Some(Self::Android(target))
+        } else {
+            None
+        }
+    }
+}
+
 pub fn sdk_path(target: &str) -> Option<String> {
     let sdk = if target.contains("apple-darwin") {
         "macosx"
@@ -29,7 +55,7 @@ pub fn default_clang_args(
     apple_args: &[String],
     android_args: &[String],
 ) -> Vec<String> {
-    let target = std::env::var("TARGET").unwrap();
+    let target = target();
 
     let mut args = vec!["-xc++".into(), "-stdlib=libc++".into(), CPP_VERSION.into()];
 
