@@ -1,6 +1,3 @@
-const MIN: usize = 11;
-const MAX: usize = 23;
-
 #[cfg(feature = "cpp-11")]
 const CPP_VERSION: &str = "-std=c++11";
 #[cfg(feature = "cpp-14")]
@@ -8,7 +5,7 @@ const CPP_VERSION: &str = "-std=c++14";
 #[cfg(feature = "cpp-17")]
 const CPP_VERSION: &str = "-std=c++17";
 
-fn sdk_path(target: &str) -> Option<String> {
+pub fn sdk_path(target: &str) -> Option<String> {
     let sdk = if target.contains("apple-darwin") {
         "macosx"
     } else if target == "x86_64-apple-ios" || target == "i386-apple-ios" {
@@ -27,7 +24,7 @@ fn sdk_path(target: &str) -> Option<String> {
     )
 }
 
-fn clang_args() -> Vec<String> {
+pub fn default_clang_args() -> Vec<String> {
     let target = std::env::var("TARGET").unwrap();
 
     let mut args = vec!["-xc++".into(), CPP_VERSION.into()];
