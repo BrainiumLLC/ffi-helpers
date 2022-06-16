@@ -29,6 +29,25 @@ impl TargetOs {
             None
         }
     }
+
+    pub fn is_ios(&self) -> bool {
+        match self {
+            TargetOs::Ios(_) => true,
+            _ => false,
+        }
+    }
+    pub fn is_android(&self) -> bool {
+        match self {
+            TargetOs::Android(_) => true,
+            _ => false,
+        }
+    }
+    pub fn is_macos(&self) -> bool {
+        match self {
+            TargetOs::MacOs(_) => true,
+            _ => false,
+        }
+    }
 }
 
 pub fn sdk_path(target: &str) -> Option<String> {
