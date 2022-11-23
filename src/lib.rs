@@ -1,3 +1,5 @@
+use std::path::Path;
+
 #[cfg(feature = "cpp-11")]
 const CPP_VERSION: &str = "-std=c++11";
 #[cfg(feature = "cpp-14")]
@@ -105,4 +107,37 @@ pub fn default_clang_args(
 
     args.push(format!("--target={}", target));
     args
+}
+
+pub fn recursive_link_dir(link_dir: impl AsRef<Path>, filters: &[&'static str]) {
+    let frameworks = walkdir::WalkDir::new(link_dir)
+        .into_iter()
+        .filter_map(|e| e.ok())
+        .filter(|e| {
+            let components = e.path().components();
+            for component in components {
+                for filter in filters {
+                    if *filter == component.as_os_str().to_str().unwrap() {
+                        return false;
+                    }
+                }
+            }
+            true
+        })
+        .filter(|dir| {
+            dir.path()
+                .extension()
+                .map_or_else(|| false, |extension| extension == "framework")
+        })
+        .collect::<Vec<_>>();
+    for framework in frameworks {
+        let path = framework.path();
+        let parent = path.parent().unwrap();
+        println!("cargo:rustc-link-search=framework={}", parent.display());
+        let framework = path.file_stem().unwrap();
+        println!(
+            "cargo:rustc-link-lib=framework={}",
+            framework.to_str().unwrap()
+        );
+    }
 }

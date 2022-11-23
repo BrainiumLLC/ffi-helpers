@@ -11,3 +11,4 @@ cpp-17 = []
 
 [dependencies]
 bossy = "0.2.1"
+walkdir = "2.3.2"
